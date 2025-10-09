@@ -1,75 +1,23 @@
-# Nuxt Minimal Starter
+## Getting Started 🚀
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+The following script handles **everything**:
 
-## Setup
+- 📦 Installing dependencies
+- 🔍 Checking your Node version
+- 💻 Running the development server
+- ⚡ Building for production and previewing your app
 
-Make sure to install dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+Run the script according to your platform:
 
 ```bash
-# npm
-npm run dev
+# Linux / macOS
+./bin/dev             # 🏃‍♂️ Run locally
+./bin/dev --production # 🚀 Build and preview production
 
-# pnpm
-pnpm dev
+# Windows
+node bin/dev.js        # 🏃‍♂️ Run locally
+node bin/dev.js --production # 🚀 Build and preview production
 
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Our project style is built using **[DaisyUI](https://daisyui.com/)** – a lightweight Tailwind CSS component library that makes styling easy and consistent.
