@@ -1,3 +1,3 @@
 <template>
-  <div>hello world hsdfhj</div>
+  <div>Hello World</div>
 </template>

@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -e  # exit on error
+
+# --- Check Node.js version ---
+REQUIRED_MAJOR=20
+NODE_MAJOR=$(node -v | sed 's/v\([0-9]*\).*/\1/')
+
+if [ "$NODE_MAJOR" -lt "$REQUIRED_MAJOR" ]; then
+  echo "❌ Node.js $REQUIRED_MAJOR+ is required. Installed: $(node -v)"
+  exit 1
+fi
+
+echo "✅ Node.js version is $NODE_MAJOR, good to go!"
+
+# --- Install dependencies if missing ---
+if [ ! -d "node_modules" ]; then
+  echo "🔄 Installing dependencies from package-lock.json..."
+  npm ci --loglevel=error
+fi
+
+# --- Check for --production flag ---
+PROD=false
+for arg in "$@"; do
+  if [ "$arg" == "--production" ]; then
+    PROD=true
+  fi
+done
+
+# --- Run Nuxt ---
+if [ "$PROD" = true ]; then
+  echo "🏗️ Building Nuxt app for production..."
+  npm run build
+  echo "👀 Previewing production build..."
+  npm run preview
+else
+  echo "🚀 Starting Nuxt development server..."
+  npm run dev
+fi
