@@ -1,3 +1,3 @@
 <template>
-  <div>Hello World</div>
+  <div class="btn btn-error">Capstone Project </div>
 </template>
