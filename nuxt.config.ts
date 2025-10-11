@@ -9,8 +9,14 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { "data-theme": "light" }, // default light mode
       link: [
-        { rel: "preload", as: "style", href: "/_nuxt/assets/css/tailwind.css" },  // Preload Tailwind CSS
+        { rel: "preload", as: "style", href: "/_nuxt/assets/css/tailwind.css" }, // preload Tailwind CSS
       ],
+    },
+  },
+  //  This ensures Nuxt includes your custom .d.ts files (like daisyui.d.ts)
+  hooks: {
+    "prepare:types": (opts) => {
+      opts.tsConfig.include?.push("./types/**/*.d.ts");
     },
   },
 });

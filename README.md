@@ -11,8 +11,11 @@ Run the script according to your platform:
 
 ```bash
 # Linux / macOS
-./bin/dev             # 🏃‍♂️ Run locally
-./bin/dev --production # 🚀 Build and preview production
+bin/dev             # 🏃‍♂️ Run locally
+bin/dev --production # 🚀 Build and preview production
+
+# Make sure the script is executable (if not, run this once)
+chmod +x bin/dev
 
 # Windows
 node bin/dev.js        # 🏃‍♂️ Run locally
