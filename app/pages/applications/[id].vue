@@ -1,5 +1,6 @@
 <template>
-  <div class="btn btn-error">Home page</div>
+<div>application detail</div>
+    
 </template>
 
 <script setup >

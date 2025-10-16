@@ -1,5 +1,5 @@
 <template>
-  <div class="btn btn-error">Home page</div>
+    <div>List internships</div>
 </template>
 
 <script setup >
