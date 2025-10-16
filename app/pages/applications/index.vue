@@ -1,5 +1,5 @@
 <template>
-  <div class="btn btn-error">Home page</div>
+<div>list application</div>
 </template>
 
 <script setup >
