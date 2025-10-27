@@ -24,3 +24,5 @@ node bin/dev.js --production # 🚀 Build and preview production
 ```
 
 Our project style is built using **[DaisyUI](https://daisyui.com/)** – a lightweight Tailwind CSS component library that makes styling easy and consistent.
+
+We’ve also added **[Nuxt Icon](https://nuxt.com/modules/icon)** for simple and customizable icon support throughout the app.
