@@ -5,12 +5,10 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   modules: ["@nuxtjs/tailwindcss", "@nuxt/icon"],
+  css: ["@/assets/css/main.css"],
   app: {
     head: {
-      htmlAttrs: { "data-theme": "light" }, // default light mode
-      link: [
-        { rel: "preload", as: "style", href: "/_nuxt/assets/css/tailwind.css" }, // preload Tailwind CSS
-      ],
+      htmlAttrs: { "data-theme": "light" },
     },
   },
   //  This ensures Nuxt includes your custom .d.ts files (like daisyui.d.ts)
