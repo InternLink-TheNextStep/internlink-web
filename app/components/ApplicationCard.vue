@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-between items-center mb-[10px] py-[12px] px-[16px] ">
+    <div class="flex justify-between items-center mb-[10px] py-[12px]  ">
 
         <div class="flex ">
             <img src="/assets/images/cambridge.jpeg" alt="" class="w-[70px] h-[70px] rounded-[8px] mr-[16px]">
@@ -10,7 +10,6 @@
             </div>
 
         </div>
-        <div class="rounded-full bg-green-700 w-3 h-3 "></div>
     </div>
 
 </template>
