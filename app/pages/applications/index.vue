@@ -1,9 +1,72 @@
 <template>
-<div>list application</div>
+    <div class="px-4 md:px-24 lg:px-[160px] mx-auto mt-8  flex flex-col ">
+
+        <h1 class="font-bold text-[24px] md:text-[32px] mb-4">My Applications</h1>
+        <div class="flex justify-start items-center rounded-[8px] border h-[48px] width-[928px] px-[16px]">
+            <Icon name="mdi:magnify" style="color:#4D8099" class="w-[24px] h-[24px] mr-[8px] " />
+            <input type="text" placeholder="Search applications"
+                class="flex-1 outline-none border-none text-[#4D8099] placeholder-[#4D8099] bg-transparent text-base" />
+        </div>
+
+
+        <div class="flex mt-6 w-[300px] text-sm gap-3 mb-5">
+            <select class="select">
+                <option disabled selected>Status</option>
+                <option>Crimson</option>
+                <option>Amber</option>
+                <option>Velvet</option>
+            </select>
+            <select class="select">
+                <option disabled selected>Date</option>
+                <option>Crimson</option>
+                <option>Amber</option>
+                <option>Velvet</option>
+            </select>
+        </div>
+        <NuxtLink v-for="company in companies" :key="company.id" :to="`/internships/${company.id}`">
+
+            <ApplicationCard :title="company.title" :applied_date="company.applied_date"
+                :company="company.company_name" />
+        </NuxtLink>
+
+
+    </div>
 </template>
 
-<script setup >
+<script setup>
 
+const companies = [
+    {
+        id: 1,
+        title: 'Marketing intern',
+        applied_date: 'Applied on 10/10/2024',
+        company_name: 'Book me plus'
+    },
+    {
+        id: 2,
+        title: 'Full-stack engineering',
+        applied_date: 'Applied on 10/12/2020',
+        company_name: 'Netflix'
+    },
+    {
+        id: 3,
+        title: 'Marketing intern',
+        applied_date: 'Applied on 1/10/2022',
+        company_name: 'Camob'
+    },
+    {
+        id: 4,
+        title: 'Marketing intern',
+        applied_date: 'Applied on 1/10/2022',
+        company_name: 'Camob'
+    },
+    {
+        id: 5,
+        title: 'Marketing intern',
+        applied_date: 'Applied on 1/10/2022',
+        company_name: 'Camob'
+    },
+]
 definePageMeta({
     layout: 'base',
 })
