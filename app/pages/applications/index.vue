@@ -1,11 +1,20 @@
 <template>
   <div
+    v-if="userStore.loading"
+    class="flex justify-center items-center h-[80vh]"
+  >
+    <p>Loading...</p>
+  </div>
+
+  <div
     class="px-4 md:px-24 lg:px-[160px] mx-auto mt-8 flex flex-col"
-    v-if="userStore.isLoggedIn"
+    v-else-if="userStore.isLoggedIn"
   >
     <h1 class="font-bold text-[24px] md:text-[32px] mb-4">My Applications</h1>
+
+    <!-- Search -->
     <div
-      class="flex justify-start items-center rounded-[8px] border h-[48px] width-[928px] px-[16px]"
+      class="flex justify-start items-center rounded-[8px] border h-[48px] w-full max-w-[928px] px-[16px]"
     >
       <Icon
         name="mdi:magnify"
@@ -19,6 +28,7 @@
       />
     </div>
 
+    <!-- Filters -->
     <div class="flex mt-6 w-[300px] text-sm gap-3 mb-5">
       <select class="select">
         <option disabled selected>Status</option>
@@ -34,6 +44,7 @@
       </select>
     </div>
 
+    <!-- Applications -->
     <NuxtLink
       v-for="company in companies"
       :key="company.id"
@@ -53,19 +64,22 @@
 </template>
 
 <script setup lang="ts">
-
+import { onMounted, watch } from "vue";
 import { useUserStore } from "#imports";
-import { onMounted } from "vue";
-import {  navigateTo } from "#app";
+import { navigateTo } from "#app";
 
 const userStore = useUserStore();
 
-
-onMounted(() => {
-  if (!userStore.isLoggedIn) {
-    navigateTo("/login");
-  }
-});
+// If user is not logged in after initialization, redirect
+watch(
+  () => userStore.isLoggedIn,
+  (loggedIn) => {
+    if (!loggedIn && !userStore.loading) {
+      navigateTo("/login");
+    }
+  },
+  { immediate: true }
+);
 
 const companies = [
   {

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import {
   onGetUserProfile,
   onLogin,
@@ -19,8 +19,47 @@ export const useUserStore = defineStore("user", () => {
   const user = ref<User | null>(null);
   const loading = ref(false);
   const errorMessage = ref("");
+  const isLoggedIn = ref(false);
   const route = useRoute();
   const refreshTimer = ref<NodeJS.Timeout | null>(null);
+
+  /** Initialize user on app load */
+  const initUser = async () => {
+    const token = useCookie("access_token").value;
+    if (!token) {
+      user.value = null;
+      isLoggedIn.value = false;
+      return;
+    }
+
+    const response = await onGetUserProfile();
+    if (response) {
+      user.value = {
+        id: response.id,
+        first_name: response.first_name,
+        last_name: response.last_name,
+        email: response.email,
+      };
+      isLoggedIn.value = true;
+    } else {
+      user.value = null;
+      isLoggedIn.value = false;
+    }
+  };
+
+  /** Schedule token refresh in-memory */
+  const scheduleTokenRefresh = (seconds: number) => {
+    if (refreshTimer.value) clearTimeout(refreshTimer.value);
+
+    refreshTimer.value = setTimeout(async () => {
+      const newToken = await onRefreshToken();
+      if (newToken) {
+        scheduleTokenRefresh(3600);
+      } else {
+        logout();
+      }
+    }, seconds * 1000);
+  };
 
   /** Login logic */
   const login = async (email: string, password: string, rememberMe = false) => {
@@ -38,7 +77,7 @@ export const useUserStore = defineStore("user", () => {
     // Save token in cookie
     useCookie("access_token").value = response.data.access_token;
 
-    // Load user profile
+    // Load user profile and update state
     await initUser();
 
     // Schedule automatic refresh every 3600s (1 hour)
@@ -53,6 +92,7 @@ export const useUserStore = defineStore("user", () => {
   const logout = () => {
     onLogout();
     user.value = null;
+    isLoggedIn.value = false;
     useCookie("access_token").value = null;
 
     if (refreshTimer.value) clearTimeout(refreshTimer.value);
@@ -63,52 +103,13 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
-  /** Initialize user on app load */
-
-  const initUser = async () => {
-    const token = useCookie("access_token").value;
-    if (!token) {
-      user.value = null;
-      return;
-    }
-
-    const response = await onGetUserProfile();
-    if (response) {
-      user.value = {
-        id: response.id,
-        first_name: response.first_name,
-        last_name: response.last_name,
-        email: response.email,
-      };
-
-    } else {
-      user.value = null;
-    }
-  };
-
-  const isLoggedIn = computed(() => !!user.value);
-
-  /** Schedule token refresh in-memory */
-  const scheduleTokenRefresh = (seconds: number) => {
-    if (refreshTimer.value) clearTimeout(refreshTimer.value);
-
-    refreshTimer.value = setTimeout(async () => {
-      const newToken = await onRefreshToken();
-      if (newToken) {
-        scheduleTokenRefresh(3600);
-      } else {
-        logout();
-      }
-    }, seconds * 1000);
-  };
-
   return {
     user,
     loading,
     errorMessage,
+    isLoggedIn,
     login,
     logout,
     initUser,
-    isLoggedIn,
   };
 });
