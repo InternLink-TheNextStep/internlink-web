@@ -108,10 +108,6 @@ const showPassword = ref(false);
 const userStore = useUserStore();
 
 const handleLogin = async () => {
-  await userStore.login(
-    formData.value.email,
-    formData.value.password,
-    formData.value.rememberMe
-  );
+  await userStore.login(formData.value.email, formData.value.password);
 };
 </script>

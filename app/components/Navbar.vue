@@ -1,107 +1,211 @@
 <template>
   <nav
-    class="flex justify-between items-center border-b border-gray-300 h-[80px] sticky top-0 bg-white z-50 px-4 md:px-0">
+    class="flex justify-between items-center border-b border-gray-300 h-[80px] sticky top-0 bg-white z-50 px-4 md:px-0"
+  >
     <!-- Logo -->
-    <NuxtLink :to="isLoggedin ? '/home' : '/'" class="font-bold text-primary text-[24px] md:ml-[40px]">
+    <NuxtLink
+      :to="isLoggedin ? '/home' : '/'"
+      class="font-bold text-primary text-[24px] md:ml-[40px]"
+    >
       InternLink
     </NuxtLink>
 
     <!-- Desktop Menu -->
     <div class="hidden md:flex mr-auto ml-[64px]">
-      <NuxtLink :to="isLoggedin ? '/home' : '/'" class="text-[16px] mr-[30px]"
-        :class="activeLinkClass(isLoggedin ? '/home' : '/')">Home</NuxtLink>
-      <NuxtLink to="/internships" class="text-[16px] mr-[22px] " :class="activeLinkClass('/internships')">Explore
-      </NuxtLink>
-      <NuxtLink to="/applications" class="text-[16px] mr-[22px]" :class="activeLinkClass('/applications')">My
-        applications</NuxtLink>
-      <NuxtLink to="/saved" class="text-[16px] mr-[22px] " :class="activeLinkClass('/saved')">Saved</NuxtLink>
-      <NuxtLink to="/matching" class="text-[16px] mr-[22px] " :class="activeLinkClass('/matching')">Intership Matching
-      </NuxtLink>
+      <NuxtLink
+        :to="isLoggedin ? '/home' : '/'"
+        class="text-[16px] mr-[30px]"
+        :class="activeLinkClass(isLoggedin ? '/home' : '/')"
+        >Home</NuxtLink
+      >
+      <NuxtLink
+        to="/internships"
+        class="text-[16px] mr-[22px]"
+        :class="activeLinkClass('/internships')"
+        >Explore</NuxtLink
+      >
+      <NuxtLink
+        to="/applications"
+        class="text-[16px] mr-[22px]"
+        :class="activeLinkClass('/applications')"
+        >My applications</NuxtLink
+      >
+      <NuxtLink
+        to="/saved"
+        class="text-[16px] mr-[22px]"
+        :class="activeLinkClass('/saved')"
+        >Saved</NuxtLink
+      >
+      <NuxtLink
+        to="/matching"
+        class="text-[16px] mr-[22px]"
+        :class="activeLinkClass('/matching')"
+        >Internship Matching</NuxtLink
+      >
     </div>
 
     <!-- Desktop Auth Buttons -->
-    <!-- if logged in  -->
-    <div v-if="isLoggedin" class="flex items-center md:mr-[40px] ml-auto mr-[10px]">
-      <NuxtLink to="/" class="hidden md:flex text-[16px] mr-[22px]">About us</NuxtLink>
-      <div
-        class="bg-gray-200 w-[40px] h-[40px] flex justify-center items-center mr-[16px] cursor-pointer  rounded-[8px] ">
-        <Icon name="mdi:bell-outline" class="w-[20px] h-[20px]" />
+    <div class="flex items-center md:mr-[40px] ml-auto mr-[10px]">
+      <NuxtLink to="/" class="hidden md:flex text-[16px] mr-[22px]"
+        >About us</NuxtLink
+      >
+
+      <!-- Show profile avatar if logged in -->
+      <div v-if="isLoggedin" class="flex items-center">
+        <div
+          class="bg-gray-200 w-[40px] h-[40px] flex justify-center items-center mr-[16px] cursor-pointer rounded-[8px]"
+        >
+          <Icon name="mdi:bell-outline" class="w-[20px] h-[20px]" />
+        </div>
+
+        <!-- Profile Dropdown -->
+        <div class="dropdown dropdown-bottom relative">
+          <div tabindex="0" role="button" class="cursor-pointer">
+            <div class="w-10 h-10 rounded-full overflow-hidden">
+              <img
+                src="/assets/images/profile.jpeg"
+                alt="avatar"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+
+          <ul
+            tabindex="-1"
+            class="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow-sm right-0 absolute"
+          >
+            <li><a>Profile</a></li>
+            <li><a @click="logout">Log Out</a></li>
+          </ul>
+        </div>
       </div>
 
-      <div class="w-[40px] h-[40px] rounded-full cursor-pointer overflow-hidden">
-        <img src="/assets/images/profile.jpeg" alt="avatar" class="w-full h-full object-cover" />
+      <!-- Show login/signup if not logged in -->
+      <div v-else class="hidden md:flex items-center">
+        <NuxtLink to="/signup">
+          <button
+            class="w-[85px] h-[40px] bg-primary rounded-[8px] text-white text-[14px] font-bold mr-[8px] hover:bg-[#4C64E6]"
+          >
+            Sign up
+          </button>
+        </NuxtLink>
+        <NuxtLink to="/login">
+          <button
+            class="w-[85px] h-[40px] bg-[#E5E8F5] rounded-[8px] text-black text-[14px] font-bold mr-[40px] hover:bg-[#D4D9ED]"
+          >
+            Log in
+          </button>
+        </NuxtLink>
       </div>
-
-
-
-    </div>
-    <!-- if not logged in -->
-    <div v-else class="hidden md:flex items-center">
-      <NuxtLink to="/" class="text-[16px] mr-[22px]">About us</NuxtLink>
-      <NuxtLink to="/signup">
-        <button
-          class="w-[85px] h-[40px] bg-primary rounded-[8px] text-white text-[14px] font-bold mr-[8px] hover:bg-[#4C64E6]">
-          Sign up
-        </button>
-      </NuxtLink>
-      <NuxtLink to="/login">
-        <button
-          class="w-[85px] h-[40px] bg-[#E5E8F5] rounded-[8px] text-black text-[14px] font-bold mr-[40px] hover:bg-[#D4D9ED]">
-          Log in
-        </button>
-      </NuxtLink>
     </div>
 
-    <!-- Mobile Burger Menu Button -->
-    <button @click="isMenuOpen = !isMenuOpen" class="md:hidden p-2" aria-label="Toggle menu">
+    <!-- Mobile Burger Menu -->
+    <button
+      @click="isMenuOpen = !isMenuOpen"
+      class="md:hidden p-2"
+      aria-label="Toggle menu"
+    >
       <Icon v-if="!isMenuOpen" name="mdi:menu" class="w-7 h-7" />
       <Icon v-else name="mdi:close" class="w-7 h-7" />
     </button>
 
     <!-- Mobile Menu -->
-    <div v-if="isMenuOpen"
-      class="absolute top-[80px] left-0 w-full bg-white border-b border-gray-300 md:hidden shadow-lg">
-      <div class="flex flex-col ">
-        <NuxtLink :to="isLoggedin ? '/home' : '/'"
-          class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4">Home</NuxtLink>
-        <NuxtLink to="/internships" class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4">Explore
-        </NuxtLink>
-        <NuxtLink to="/applications" class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4">My
-          applications
-        </NuxtLink>
-        <NuxtLink to="/saved" class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4">Saved</NuxtLink>
-        <NuxtLink to="/matching" class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4">Internship
-          Matching</NuxtLink>
-        <NuxtLink to="/" class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4">About us</NuxtLink>
+    <div
+      v-if="isMenuOpen"
+      class="absolute top-[80px] left-0 w-full bg-white border-b border-gray-300 md:hidden shadow-lg"
+    >
+      <div class="flex flex-col">
+        <NuxtLink
+          :to="isLoggedin ? '/home' : '/'"
+          class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4"
+          >Home</NuxtLink
+        >
+        <NuxtLink
+          to="/internships"
+          class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4"
+          >Explore</NuxtLink
+        >
+        <NuxtLink
+          to="/applications"
+          class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4"
+          >My applications</NuxtLink
+        >
+        <NuxtLink
+          to="/saved"
+          class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4"
+          >Saved</NuxtLink
+        >
+        <NuxtLink
+          to="/matching"
+          class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4"
+          >Internship Matching</NuxtLink
+        >
+        <NuxtLink
+          to="/"
+          class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4"
+          >About us</NuxtLink
+        >
 
-        <div v-if="!isLoggedin" class="flex flex-col gap-3 mt-4">
-          <button class="w-full h-[40px] bg-primary rounded-[8px] text-white text-[14px] font-bold hover:bg-[#4C64E6]">
-            Sign up
-          </button>
+        <div v-if="!isLoggedin" class="flex flex-col gap-3 mt-4 px-4">
+          <NuxtLink to="/signup">
+            <button
+              class="w-full h-[40px] bg-primary rounded-[8px] text-white text-[14px] font-bold hover:bg-[#4C64E6]"
+            >
+              Sign up
+            </button>
+          </NuxtLink>
+          <NuxtLink to="/login">
+            <button
+              class="w-full h-[40px] bg-[#E5E8F5] rounded-[8px] text-black text-[14px] font-bold hover:bg-[#D4D9ED]"
+            >
+              Log in
+            </button>
+          </NuxtLink>
+        </div>
+
+        <div v-else class="flex flex-col gap-3 mt-4 px-4">
           <button
-            class="w-full h-[40px] bg-[#E5E8F5] rounded-[8px] text-black text-[14px] font-bold hover:bg-[#D4D9ED]">
-            Log in
+            @click="logout"
+            class="w-full h-[40px] bg-[#E5E8F5] rounded-[8px] text-black text-[14px] font-bold hover:bg-[#D4D9ED]"
+          >
+            Log out
           </button>
         </div>
-        <button v-else
-          class="w-full h-[40px] bg-[#E5E8F5] rounded-[8px] text-black text-[14px] font-bold hover:bg-[#D4D9ED]">
-          Log out
-        </button>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-const isMenuOpen = ref(false)
-const currentPath = useRoute();
-const isLoggedin = true;
-// Close menu when route changes
-watch(() => useRoute().path, () => {
+import { ref, computed, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
+import { useUserStore } from "~/stores/user";
 
-  isMenuOpen.value = false;
-})
-const activeLinkClass = ((path) => {
-  return currentPath.path === path ? 'text-primary' : ''
-})
+const userStore = useUserStore();
+const isLoggedin = computed(() => userStore.isLoggedIn); // reactive login state
+const isMenuOpen = ref(false);
+const isReady = ref(false); // track when user state is initialized
+const route = useRoute();
+
+// Initialize user on client mount
+onMounted(async () => {
+  await userStore.initUser(); // loads user profile and sets isLoggedIn
+  isReady.value = true; // mark UI as ready to render links
+});
+
+// Close mobile menu on route change
+watch(
+  () => route.path,
+  () => {
+    isMenuOpen.value = false;
+  }
+);
+
+// Logout action
+const logout = () => {
+  userStore.logout();
+};
+
+// Add active class for current route
+const activeLinkClass = (path) => (route.path === path ? "text-primary" : "");
 </script>
