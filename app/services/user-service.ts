@@ -14,7 +14,7 @@ interface LoginResponse {
 }
 
 export const onLogin = async (email: string, password: string) => {
-  const response = await baseApi<LoginResponse>("/login", {
+  const response = await baseApi<LoginResponse>("user/login", {
     method: "POST",
     body: { email, password },
     headers: { "Content-Type": "application/json" },
@@ -27,7 +27,7 @@ export const onLogin = async (email: string, password: string) => {
 };
 
 export const onLogout = async () => {
-  const response = await baseApi<LoginResponse>("/logout", {
+  const response = await baseApi<LoginResponse>("user/logout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });
@@ -70,7 +70,7 @@ export const onGetUserProfile = async () => {
 
   try {
     const response = await baseApi<{ data: { id: number; first_name: string; last_name: string; email: string } }>(
-      "/profile",
+      "user/profile",
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
