@@ -27,10 +27,10 @@ const config: Config = {
       },
     },
   },
-  plugins: [daisyui],
+  plugins: [daisyui, require("@tailwindcss/typography")],
   daisyui: {
-    themes: false, 
-    base: false
+    themes: false,
+    base: false,
   },
 };
 

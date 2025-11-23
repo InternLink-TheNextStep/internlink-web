@@ -8,3 +8,14 @@ label.required::after {
   content: " *";
   color: red;
 }
+
+
+.prose li {
+  margin-bottom: 0.25rem;
+}
+
+.prose strong {
+  font-weight: 600; /* semibold */
+  font-size: 1.25rem; /* Tailwind text-xl */
+  line-height: 1.75rem; /* Tailwind leading-7 */
+}

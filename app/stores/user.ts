@@ -8,12 +8,8 @@ import {
 } from "~/services/user-service";
 import { useCookie, navigateTo, useRoute } from "#app";
 
-export interface User {
-  id: number | null;
-  first_name: string | null;
-  last_name: string | null;
-  email: string | null;
-}
+import type { User } from "@/core/types/user";
+
 
 export const useUserStore = defineStore("user", () => {
   const user = ref<User | null>(null);

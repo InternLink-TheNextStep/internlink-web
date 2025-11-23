@@ -23,6 +23,7 @@
     "@iconify-json/lucide": "^1.2.72",
     "@iconify-json/mdi": "^1.2.3",
     "@nuxtjs/tailwindcss": "^6.14.0",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^24.7.0"
   }
 }

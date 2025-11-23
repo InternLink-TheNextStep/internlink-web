@@ -9,6 +9,7 @@
         :title="intern.title"
         :description="intern.description"
         :image="intern.image"
+        :slug="intern.slug"
       />
     </div>
     <div v-else class="text-center text-gray-500 mt-20">

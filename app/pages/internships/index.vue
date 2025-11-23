@@ -1,60 +1,107 @@
 <template>
   <section class="min-h-screen bg-gray-50 pb-16">
     <div class="max-w-7xl mx-auto px-4 py-6">
-      <h1 class="text-3xl font-bold text-gray-800 mb-4">Find your dream internship</h1>
-      <p class="text-gray-500 mt-2 mb-4">
+      <!-- Page Title -->
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">
+        Find your dream internship
+      </h1>
+      <p class="text-gray-500 mb-6">
         Explore opportunities from leading companies in Cambodia.
       </p>
 
-      <!-- 🔍 Search Component -->
-      <InternshipSearchBar v-model="searchQuery" />
+      <!-- Search & Filters -->
+      <div class="flex flex-col md:flex-row gap-4 mb-6">
+        <InternshipSearchBar v-model="searchQuery" />
+        <InternshipFilters v-model="filters" />
+      </div>
 
-      <!-- 🔽 Filters Component -->
-      <InternshipFilters v-model="filters" />
+      <!-- Loading / Error / Empty States -->
+      <div v-if="pending" class="space-y-4 mb-4">
+        <InternshipCardSkeleton v-for="n in 6" :key="n" />
+      </div>
+      <div v-else-if="error" class="text-red-500 mb-4">
+        Failed to load internships.
+      </div>
+      <div
+        v-else-if="filteredInternships.length === 0"
+        class="text-gray-500 mb-4"
+      >
+        No internships found matching your criteria.
+      </div>
 
-      <!-- 🧩 Internship List -->
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Featured Internships</h2>
-      <InternshipList :internships="filteredInternships" :query="searchQuery" />
+      <!-- Internship List -->
+      <InternshipList
+        v-else
+        :internships="filteredInternships"
+        :query="searchQuery"
+      />
     </div>
   </section>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
-import { internships } from '@/data/internships'
-import InternshipSearchBar from '~/components/internships/InternshipSearchBar.vue'
-import InternshipFilters from '~/components/internships/InternshipFilters.vue'
-import InternshipList from '~/components/internships/InternshipList.vue'
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
 
-definePageMeta({
-  layout: 'base'
-})
+import InternshipSearchBar from "~/components/internships/InternshipSearchBar.vue";
+import InternshipFilters from "~/components/internships/InternshipFilters.vue";
+import InternshipList from "~/components/internships/InternshipList.vue";
+import InternshipCardSkeleton from "~/components/skeletons/InternshipCardSkeleton.vue";
 
-const searchQuery = ref('')
+import type { Internship } from "~/core/types/internship";
+import { getInternships } from "@/services/internship-service";
+
+definePageMeta({ layout: "base" });
+
+// ✅ State
+const internships = ref<Internship[]>([]);
+const pending = ref(true);
+const error = ref<string | null>(null);
+
+// 🔥 Fetch internships
+const fetchInternships = async () => {
+  try {
+    pending.value = true;
+    error.value = null;
+    internships.value = await getInternships();
+    console.log("Fetched internships:", internships.value);
+  } catch (err) {
+    console.error("Error fetching internships:", err);
+    error.value = "Failed to load internships.";
+  } finally {
+    pending.value = false;
+  }
+};
+
+onMounted(fetchInternships);
+
+// 🔍 Search input
+const searchQuery = ref("");
+
+// 🎛️ Filters
 const filters = ref({
-  industry: '',
-  location: '',
-  duration: '',
-  skills: ''
-})
+  industry: "",
+  location: "",
+  duration: "",
+  skills: "",
+});
 
-// Computed filtering logic
-const filteredInternships = computed(() =>
-  internships.filter((intern) => {
-    const query = searchQuery.value.toLowerCase()
+// 🧠 Safe filtered internships
+const filteredInternships = computed(() => {
+  const list = internships.value || [];
+  const query = searchQuery.value.toLowerCase();
+
+  return list.filter((intern) => {
+    // Safe access to properties
+    const title = intern.title?.toLowerCase() ?? "";
+    const desc = intern.description?.toLowerCase() ?? "";
+    const companyName = intern.company?.name?.toLowerCase() ?? "";
+
     const matchesSearch =
-      intern.title.toLowerCase().includes(query) ||
-      intern.description.toLowerCase().includes(query) ||
-      intern.category.toLowerCase().includes(query) ||
-      intern.company.name.toLowerCase().includes(query)
+      title.includes(query) ||
+      desc.includes(query) ||
+      companyName.includes(query);
 
-    const matchesIndustry =
-      !filters.value.industry || intern.category === filters.value.industry
-    const matchesLocation =
-      !filters.value.location ||
-      intern.company.location.toLowerCase().includes(filters.value.location.toLowerCase())
-
-    return matchesSearch && matchesIndustry && matchesLocation
-  })
-)
+    return matchesSearch;
+  });
+});
 </script>
