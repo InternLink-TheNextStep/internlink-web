@@ -10,7 +10,6 @@ interface LoginResponse {
   message: string;
   status: any;
   errors: any;
- 
 }
 
 export const onLogin = async (email: string, password: string) => {
@@ -19,7 +18,6 @@ export const onLogin = async (email: string, password: string) => {
     body: { email, password },
     headers: { "Content-Type": "application/json" },
   });
-
 
   console.log("Login response:", response.status);
 
@@ -69,16 +67,35 @@ export const onGetUserProfile = async () => {
   if (!token) return null;
 
   try {
-    const response = await baseApi<{ data: { id: number; first_name: string; last_name: string; email: string } }>(
-      "user/profile",
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const response = await baseApi<{
+      data: {
+        id: number;
+        first_name: string;
+        last_name: string;
+        email: string;
+      };
+    }>("user/profile", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     return response.data;
   } catch {
     return null;
   }
-}
+};
+
+export const onSignUp = async (
+  email: string,
+  password: string,
+  first_name: string,
+  last_name: string
+) => {
+  const response = await baseApi<LoginResponse>("user/signup", {
+    method: "POST",
+    body: { email, password, first_name, last_name },
+    headers: { "Content-Type": "application/json" },
+  });
+
+  return response;
+};

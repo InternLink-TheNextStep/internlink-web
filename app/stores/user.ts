@@ -5,98 +5,170 @@ import {
   onLogin,
   onLogout,
   onRefreshToken,
+  onSignUp,
 } from "~/services/user-service";
-import { useCookie, navigateTo, useRoute } from "#app";
+import { useCookie, navigateTo, useRoute, useRouter } from "#app";
 
 import type { User } from "@/core/types/user";
-
 
 export const useUserStore = defineStore("user", () => {
   const user = ref<User | null>(null);
   const loading = ref(false);
   const errorMessage = ref("");
   const isLoggedIn = ref(false);
-  const route = useRoute();
   const refreshTimer = ref<NodeJS.Timeout | null>(null);
 
-  /** Initialize user on app load */
-  const initUser = async () => {
-    const token = useCookie("access_token").value;
-    if (!token) {
-      user.value = null;
-      isLoggedIn.value = false;
-      return;
+  const route = useRoute();
+  const router = useRouter();
+
+  /** --- Helpers --- */
+  const setToken = (token: string) => (useCookie("access_token").value = token);
+  const clearToken = () => (useCookie("access_token").value = null);
+
+  // Safe navigation to prevent redundant warnings
+  const safeNavigate = (path: string) => {
+    if (!import.meta.client) return;
+
+    const resolved = router.resolve(path);
+    const current = router.currentRoute.value;
+
+    if (
+      current.fullPath.replace(/\/$/, "") ===
+      resolved.fullPath.replace(/\/$/, "")
+    ) {
+      return; // already on the target, do nothing
     }
 
-    const response = await onGetUserProfile();
-    if (response) {
+    navigateTo(resolved.fullPath, { replace: true });
+  };
+
+  const resetUser = () => {
+    user.value = null;
+    isLoggedIn.value = false;
+  };
+
+  /** --- Initialize user --- */
+  const initUser = async () => {
+    const token = useCookie("access_token").value;
+    if (!token) return resetUser();
+
+    try {
+      const profile = await onGetUserProfile();
+      if (!profile) return resetUser();
+
       user.value = {
-        id: response.id,
-        first_name: response.first_name,
-        last_name: response.last_name,
-        email: response.email,
+        id: profile.id,
+        first_name: profile.first_name,
+        last_name: profile.last_name,
+        email: profile.email,
       };
       isLoggedIn.value = true;
-    } else {
-      user.value = null;
-      isLoggedIn.value = false;
+    } catch {
+      resetUser();
     }
   };
 
-  /** Schedule token refresh in-memory */
+  /** --- Token refresh --- */
   const scheduleTokenRefresh = (seconds: number) => {
     if (refreshTimer.value) clearTimeout(refreshTimer.value);
 
     refreshTimer.value = setTimeout(async () => {
-      const newToken = await onRefreshToken();
-      if (newToken) {
-        scheduleTokenRefresh(3600);
-      } else {
+      try {
+        const newToken = await onRefreshToken();
+        if (newToken) {
+          scheduleTokenRefresh(3600); // refresh again in 1h
+        } else {
+          logout();
+        }
+      } catch {
         logout();
       }
     }, seconds * 1000);
   };
 
-  /** Login logic */
-  const login = async (email: string, password: string, rememberMe = false) => {
+  /** --- Wrapper to safely call APIs and handle validation errors --- */
+  const safeApiCall = async (fn: Function) => {
+    try {
+      return await fn();
+    } catch (err: any) {
+      if (err?.response?._data) return err.response._data;
+      throw err;
+    }
+  };
+
+  /** --- Login --- */
+  const login = async (email: string, password: string) => {
     loading.value = true;
     errorMessage.value = "";
 
-    const response = await onLogin(email, password);
+    try {
+      const response = await safeApiCall(() => onLogin(email, password));
 
-    if (response?.status !== "success" || !response?.data?.access_token) {
-      errorMessage.value = response?.message || "Login failed";
+      if (
+        !response ||
+        response.status !== "success" ||
+        !response.data?.access_token
+      ) {
+        errorMessage.value = response?.message || "Login failed";
+        return; // do not navigate
+      }
+
+      setToken(response.data.access_token);
+      await initUser();
+      scheduleTokenRefresh(3600);
+      safeNavigate("/home");
+    } catch (err: any) {
+      errorMessage.value = err?.message || "Network error";
+    } finally {
       loading.value = false;
-      return;
     }
-
-    // Save token in cookie
-    useCookie("access_token").value = response.data.access_token;
-
-    // Load user profile and update state
-    await initUser();
-
-    // Schedule automatic refresh every 3600s (1 hour)
-    scheduleTokenRefresh(3600);
-
-    if (import.meta.client && route.path !== "/home") navigateTo("/home");
-
-    loading.value = false;
   };
 
-  /** Logout logic */
+  /** --- Signup --- */
+  const signup = async (
+    first_name: string,
+    last_name: string,
+    email: string,
+    password: string
+  ) => {
+    loading.value = true;
+    errorMessage.value = "";
+
+    try {
+      const response = await safeApiCall(() =>
+        onSignUp(email, password, first_name, last_name)
+      );
+
+      if (
+        !response ||
+        response.status !== "success" ||
+        !response.data?.access_token
+      ) {
+        errorMessage.value = response?.message || "Signup failed";
+        return; // do not navigate
+      }
+
+      setToken(response.data.access_token);
+      await initUser();
+      scheduleTokenRefresh(3600);
+      safeNavigate("/home");
+    } catch (err: any) {
+      errorMessage.value = err?.message || "Network error";
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  /** --- Logout --- */
   const logout = () => {
     onLogout();
-    user.value = null;
-    isLoggedIn.value = false;
-    useCookie("access_token").value = null;
+    resetUser();
+    clearToken();
 
     if (refreshTimer.value) clearTimeout(refreshTimer.value);
     refreshTimer.value = null;
 
-    if (import.meta.client && route.path !== "/login") {
-      navigateTo("/login", { replace: true });
-    }
+    safeNavigate("/login"); // only navigates if not already on /login
   };
 
   return {
@@ -105,6 +177,7 @@ export const useUserStore = defineStore("user", () => {
     errorMessage,
     isLoggedIn,
     login,
+    signup,
     logout,
     initUser,
   };
