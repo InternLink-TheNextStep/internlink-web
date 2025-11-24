@@ -64,22 +64,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from "vue";
-import { useUserStore } from "#imports";
-import { navigateTo } from "#app";
+
+
+
 
 const userStore = useUserStore();
 
-// If user is not logged in after initialization, redirect
-watch(
-  () => userStore.isLoggedIn,
-  (loggedIn) => {
-    if (!loggedIn && !userStore.loading) {
-      navigateTo("/login");
-    }
-  },
-  { immediate: true }
-);
 
 const companies = [
   {
@@ -116,5 +106,6 @@ const companies = [
 
 definePageMeta({
   layout: "base",
+middleware:['auth-user'],
 });
 </script>
