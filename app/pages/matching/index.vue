@@ -95,7 +95,8 @@
 
 <script setup>
 definePageMeta({
-    layout: 'base',
+    layout:'base',
+    middleware:["auth-user"]
 })
 
 const file = ref(null);
