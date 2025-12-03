@@ -8,7 +8,7 @@
         :category="intern.category"
         :title="intern.title"
         :description="intern.description"
-        :image="intern.image"
+        :file_path="intern.file_path"
         :slug="intern.slug"
       />
     </div>

@@ -22,8 +22,8 @@
 
     <!-- Right -->
     <img
-      v-if="image"
-      :src="image"
+      v-if="file_path"
+      :src="getSpaceFileUrl(file_path)"
       alt="Internship image"
       class="w-full sm:w-48 h-32 object-cover rounded-xl mt-4 sm:mt-0 sm:ml-6 skeleton"
     />
@@ -42,7 +42,7 @@ defineProps({
   category: String,
   title: String,
   description: String,
-  image: String,
+  file_path: String,
   slug: String,
 });
 </script>
