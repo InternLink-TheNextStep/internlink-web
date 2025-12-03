@@ -14,6 +14,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
+      doSpacesUrl: process.env.NUXT_PUBLIC_DO_SPACES_URL,
     },
   },
   //  This ensures Nuxt includes your custom .d.ts files (like daisyui.d.ts)

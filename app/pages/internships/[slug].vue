@@ -1,6 +1,6 @@
 <template>
   <section class="min-h-screen bg-gray-50 pb-20">
-    <div class="max-w-5xl mx-auto px-6 pt-16">
+    <div class="max-w-5xl mx-auto px-6 ">
   
       <NuxtLink
         to="/internships"

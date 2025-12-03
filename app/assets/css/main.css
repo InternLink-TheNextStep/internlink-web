@@ -4,11 +4,14 @@
   --color-primary: #1294d4;
 }
 
+body {
+  @apply bg-gray-50;
+}
+
 label.required::after {
   content: " *";
   color: red;
 }
-
 
 .prose li {
   margin-bottom: 0.25rem;
