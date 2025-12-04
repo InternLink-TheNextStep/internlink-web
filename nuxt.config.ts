@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
       doSpacesUrl: process.env.NUXT_PUBLIC_DO_SPACES_URL,
+      googleMapsApiKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     },
   },
   //  This ensures Nuxt includes your custom .d.ts files (like daisyui.d.ts)
