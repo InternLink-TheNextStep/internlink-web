@@ -25,7 +25,7 @@
       v-if="file_path"
       :src="getSpaceFileUrl(file_path)"
       alt="Internship image"
-      class="w-full sm:w-48 h-32 object-cover rounded-xl mt-4 sm:mt-0 sm:ml-6 skeleton"
+      class="w-full sm:w-48 h-32 object-cover rounded-xl mt-4 sm:mt-0 sm:ml-6 "
     />
 
     <!-- Skeleton fallback if no image -->

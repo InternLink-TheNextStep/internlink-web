@@ -28,7 +28,8 @@ export const getInternshipBySlug = async (
 
   try {
     const response = await baseApi<{ data: Internship }>(`internships/${slug}`);
-
+    
+    console.log(response.data);
     return response.data ?? null;
   } catch (error) {
     console.error(`Failed to fetch internship: ${slug}`, error);

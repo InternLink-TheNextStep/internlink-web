@@ -40,7 +40,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { useInternshipSearch } from "~/composables/useInternshipSearch";
 
 import InternshipSearchBar from "~/components/internships/InternshipSearchBar.vue";
