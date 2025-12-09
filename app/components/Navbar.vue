@@ -1,52 +1,52 @@
 <template>
   <nav
-    class="flex justify-between items-center border-b border-gray-300 h-[80px] sticky top-0 bg-white z-50 px-4 md:px-0"
+    class="flex justify-between items-center border-b border-gray-300 h-[80px] sticky top-0 bg-white z-50 px-4 lg:px-0"
   >
     <!-- Logo -->
     <NuxtLink
       :to="isLoggedin ? '/home' : '/'"
-      class="font-bold text-primary text-[24px] md:ml-[40px]"
+      class="font-bold text-primary text-[24px] lg:ml-[10px]"
     >
       InternLink
     </NuxtLink>
 
     <!-- Desktop Menu -->
-    <div class="hidden md:flex mr-auto ml-[64px]">
+    <div class="hidden lg:flex mr-auto ml-[50px]">
       <NuxtLink
         :to="isLoggedin ? '/home' : '/'"
-        class="text-[16px] mr-[30px]"
+        class="text-[16px] mr-[20px]"
         :class="activeLinkClass(isLoggedin ? '/home' : '/')"
         >Home</NuxtLink
       >
       <NuxtLink
         to="/internships"
-        class="text-[16px] mr-[22px]"
+        class="text-[16px] mr-[20px]"
         :class="activeLinkClass('/internships')"
         >Explore</NuxtLink
       >
       <NuxtLink
         to="/applications"
-        class="text-[16px] mr-[22px]"
+        class="text-[16px] mr-[20px]"
         :class="activeLinkClass('/applications')"
         >My applications</NuxtLink
       >
       <NuxtLink
         to="/saved"
-        class="text-[16px] mr-[22px]"
+        class="text-[16px] mr-[20px]"
         :class="activeLinkClass('/saved')"
         >Saved</NuxtLink
       >
       <NuxtLink
         to="/matching"
-        class="text-[16px] mr-[22px]"
+        class="text-[16px]"
         :class="activeLinkClass('/matching')"
         >Internship Matching</NuxtLink
       >
     </div>
 
     <!-- Desktop Auth Buttons -->
-    <div class="flex items-center md:mr-[40px] ml-auto mr-[10px]">
-      <NuxtLink to="/" class="hidden md:flex text-[16px] mr-[22px]"
+    <div class="flex items-center lg:mr-[40px] ml-auto mr-[10px]">
+      <NuxtLink to="/" class="hidden lg:flex text-[16px] mr-[22px]"
         >About us</NuxtLink
       >
 
@@ -81,7 +81,7 @@
       </div>
 
       <!-- Show login/signup if not logged in -->
-      <div v-else class="hidden md:flex items-center">
+      <div v-else class="hidden lg:flex items-center">
         <NuxtLink to="/signup">
           <button
             class="w-[85px] h-[40px] bg-primary rounded-[8px] text-white text-[14px] font-bold mr-[8px] hover:bg-[#4C64E6]"
@@ -91,7 +91,7 @@
         </NuxtLink>
         <NuxtLink to="/login">
           <button
-            class="w-[85px] h-[40px] bg-[#E5E8F5] rounded-[8px] text-black text-[14px] font-bold mr-[40px] hover:bg-[#D4D9ED]"
+            class="w-[85px] h-[40px] bg-[#E5E8F5] rounded-[8px] text-black text-[14px] font-bold mr-[10px] hover:bg-[#D4D9ED]"
           >
             Log in
           </button>
@@ -102,7 +102,7 @@
     <!-- Mobile Burger Menu -->
     <button
       @click="isMenuOpen = !isMenuOpen"
-      class="md:hidden p-2"
+      class="lg:hidden p-2"
       aria-label="Toggle menu"
     >
       <Icon v-if="!isMenuOpen" name="mdi:menu" class="w-7 h-7" />
@@ -112,7 +112,7 @@
     <!-- Mobile Menu -->
     <div
       v-if="isMenuOpen"
-      class="absolute top-[80px] left-0 w-full bg-white border-b border-gray-300 md:hidden shadow-lg"
+      class="absolute top-[80px] left-0 w-full bg-white border-b border-gray-300 lg:hidden shadow-lg"
     >
       <div class="flex flex-col">
         <NuxtLink
@@ -146,7 +146,7 @@
           >About us</NuxtLink
         >
 
-        <div v-if="!isLoggedin" class="flex flex-col gap-3 mt-4 px-4">
+        <div v-if="!isLoggedin" class="flex flex-col gap-3 mt-4 px-4 pb-4">
           <NuxtLink to="/signup">
             <button
               class="w-full h-[40px] bg-primary rounded-[8px] text-white text-[14px] font-bold hover:bg-[#4C64E6]"
@@ -163,7 +163,7 @@
           </NuxtLink>
         </div>
 
-        <div v-else class="flex flex-col gap-3 mt-4 px-4">
+        <div v-else class="flex flex-col gap-3 mt-4 px-4 pb-4">
           <button
             @click="logout"
             class="w-full h-[40px] bg-[#E5E8F5] rounded-[8px] text-black text-[14px] font-bold hover:bg-[#D4D9ED]"
@@ -182,18 +182,16 @@ import { useRoute } from "vue-router";
 import { useUserStore } from "~/stores/user";
 
 const userStore = useUserStore();
-const isLoggedin = computed(() => userStore.isLoggedIn); // reactive login state
+const isLoggedin = computed(() => userStore.isLoggedIn);
 const isMenuOpen = ref(false);
-const isReady = ref(false); // track when user state is initialized
+const isReady = ref(false);
 const route = useRoute();
 
-// Initialize user on client mount
 onMounted(async () => {
-  await userStore.initUser(); // loads user profile and sets isLoggedIn
-  isReady.value = true; // mark UI as ready to render links
+  await userStore.initUser();
+  isReady.value = true;
 });
 
-// Close mobile menu on route change
 watch(
   () => route.path,
   () => {
@@ -201,11 +199,9 @@ watch(
   }
 );
 
-// Logout action
 const logout = () => {
   userStore.logout();
 };
 
-// Add active class for current route
 const activeLinkClass = (path) => (route.path === path ? "text-primary" : "");
 </script>
