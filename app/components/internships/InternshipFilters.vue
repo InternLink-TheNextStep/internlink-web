@@ -1,30 +1,62 @@
 <template>
-  <div class="flex flex-wrap gap-3 mb-10">
+  <div class="flex flex-wrap gap-3">
+    <!-- Industry Dropdown -->
     <FilterDropdown
-      label="Industry"
-      v-model="filters.industry"
-      :options="['Technology', 'Finance', 'Marketing', 'Design']"
+      v-model="localFilters.industry"
+      :options="filterStore.industryOptions"
     />
+
+    <!-- Location Dropdown -->
     <FilterDropdown
-      label="Location"
-      v-model="filters.location"
-      :options="['Phnom Penh', 'Siem Reap', 'Battambang']"
-    />
-    <FilterDropdown
-      label="Duration"
-      v-model="filters.duration"
-      :options="['1–3 months', '3–6 months', '6+ months']"
-    />
-    <FilterDropdown
-      label="Skills"
-      v-model="filters.skills"
-      :options="['Frontend', 'Backend', 'Marketing', 'Design']"
+      v-model="localFilters.location"
+      :options="filterStore.placeOptions"
     />
   </div>
 </template>
 
-<script setup>
-import FilterDropdown from '~/components/FilterDropdown.vue'
+<script setup lang="ts">
+import { reactive, watch, onMounted } from "vue";
+import { useFilterStore } from "~/stores/userFilterStore";
 
-const filters = defineModel() // allows parent to bind filters object via v-model
+const props = defineProps<{
+  modelValue: {
+    industry: string;
+    location: string;
+    skills?: string;
+  };
+}>();
+
+const emit = defineEmits<{
+  (e: "update:modelValue", value: typeof props.modelValue): void;
+}>();
+
+const filterStore = useFilterStore();
+
+// Local copy that syncs with parent v-model
+const localFilters = reactive({
+  industry: props.modelValue.industry ?? "All Industries",
+  location: props.modelValue.location ?? "All Locations",
+  skills: props.modelValue.skills ?? "All Skills",
+});
+
+// Log when filters change
+watch(
+  localFilters,
+  (newVal) => {
+    console.log("🔥 Filters changed:", newVal);
+    emit("update:modelValue", { ...newVal });
+  },
+  { deep: true }
+);
+
+// Load dropdown options
+onMounted(async () => {
+  console.log("📌 Fetching places & industries...");
+
+  await filterStore.fetchPlaces();
+  console.log("📍 Places loaded:", filterStore.placeOptions);
+
+  await filterStore.fetchIndustries();
+  console.log("🏭 Industries loaded:", filterStore.industryOptions);
+});
 </script>

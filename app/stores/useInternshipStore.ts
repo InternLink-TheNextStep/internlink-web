@@ -1,4 +1,5 @@
 import type { Internship } from "@/core/types/internship";
+import type { Place } from "@/core/types/place";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import {
@@ -8,15 +9,22 @@ import {
 
 export const useInternshipStore = defineStore("internships", () => {
   const internships = ref<Internship[]>([]);
-  const loading = ref(false);
+  const currentInternship = ref<Internship | null>(null);
+  const places = ref<Place[]>([]); // for filtering by place/state
+  const loading = ref(true);
   const error = ref<string | null>(null);
 
+  /** Fetch all internships */
   const fetchInternships = async () => {
-    if (internships.value.length) return;
+    if (internships.value.length) {
+      loading.value = false;
+      return;
+    }
+
+    loading.value = true;
+    error.value = null;
 
     try {
-      loading.value = true;
-      error.value = null;
       const data = await getInternships();
       internships.value = data ?? [];
     } catch (err) {
@@ -27,27 +35,29 @@ export const useInternshipStore = defineStore("internships", () => {
     }
   };
 
+  /** Fetch a single internship by slug */
   const fetchInternshipBySlug = async (
     slug: string
   ): Promise<Internship | null> => {
+    if (currentInternship.value?.slug === slug) return currentInternship.value;
+
+    const cached = internships.value.find((i) => i.slug === slug);
+    if (cached) {
+      currentInternship.value = cached;
+      return cached;
+    }
+
+    loading.value = true;
+    error.value = null;
+
     try {
-      loading.value = true;
-      error.value = null;
-
-      // Check cache first
-      const cached = internships.value.find((i) => i.slug === slug);
-      if (cached) return cached;
-
-      // Fetch from API
       const data = await getInternshipBySlug(slug);
-      if (!data) return null; // API returned null
+      if (!data) return null;
 
-      // Cache in store
-      internships.value.push(data);
-
+      currentInternship.value = data;
       return data;
     } catch (err) {
-      console.error(`Error fetching internship with slug ${slug}:`, err);
+      console.error(`Error fetching internship ${slug}:`, err);
       error.value = "Failed to load internship.";
       return null;
     } finally {
@@ -57,6 +67,8 @@ export const useInternshipStore = defineStore("internships", () => {
 
   return {
     internships,
+    currentInternship,
+    places,
     loading,
     error,
     fetchInternships,
