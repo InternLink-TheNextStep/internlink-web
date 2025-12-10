@@ -1,6 +1,7 @@
 <template>
   <section class="min-h-screen bg-gray-50 pb-20">
     <div class="max-w-5xl mx-auto px-6">
+      <!-- Back link -->
       <NuxtLink
         to="/internships"
         class="text-blue-600 hover:underline text-sm mb-4 inline-block"
@@ -10,7 +11,7 @@
 
       <!-- Loading state -->
       <div
-        v-if="store.loading"
+        v-if="store.loading && !internship"
         class="flex flex-col items-center justify-center h-48 text-gray-500"
       >
         <span class="loading loading-ring text-blue-600 text-4xl mb-4"></span>
@@ -24,7 +25,6 @@
 
       <!-- Internship content -->
       <div v-else-if="internship">
-        <!-- Title and company info -->
         <h1 class="text-3xl font-bold text-gray-900 mb-4">
           {{ internship.title }}
         </h1>
@@ -54,11 +54,10 @@
         <InternshipCompany
           v-else-if="activeTab === 'About the company'"
           :internship="internship"
-          :active-internships="activeInternships"
         />
       </div>
 
-      <!-- Not found state -->
+      <!-- Not found -->
       <div v-else class="text-center mt-20">
         <p class="text-gray-500 text-lg">Internship not found.</p>
       </div>
@@ -67,34 +66,38 @@
 </template>
 
 <script setup lang="ts">
-import { useInternshipStore } from "@/stores/internship";
+import { ref, computed, watch } from "vue";
+import { useRoute } from "vue-router";
+import { useInternshipStore } from "~/stores/useInternshipStore";
 
 import InternshipOverview from "~/components/InternshipOverview.vue";
 import InternshipCompany from "~/components/InternshipCompany.vue";
-import type { Internship } from "~/core/types/internship";
 
 const route = useRoute();
 const store = useInternshipStore();
 
-// Tabs and active state
+// Tabs
 const activeTab = ref("Overview");
 const tabs = ["Overview", "About the company"];
 
-// Computed: find internship by slug
-let internship = ref<Internship | null>(null);
-
-const activeInternships = computed(() => {
-  if (!internship.value) return [];
-  return store.internships.filter(
-    (i) => i.company?.id === internship.value?.company?.id
-  );
+// Compute currently viewed internship only if slug matches
+const internship = computed(() => {
+  const slug = route.params.slug as string;
+  if (!store.currentInternship) return null;
+  return store.currentInternship.slug === slug ? store.currentInternship : null;
 });
 
-onMounted(async () => {
-  internship.value = await store.fetchInternshipBySlug(
-    route.params.slug as string
-  );
-});
+// Fetch fresh data when slug changes
+watch(
+  () => route.params.slug,
+  async (slug) => {
+    if (!slug) return;
+    await store.fetchInternshipBySlug(slug as string);
+  },
+  { immediate: true }
+);
+
+console.log("Internship page loaded:", internship.value);
 
 definePageMeta({ layout: "base" });
 </script>

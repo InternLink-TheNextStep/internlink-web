@@ -179,7 +179,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import { useUserStore } from "~/stores/user";
+import { useUserStore } from "~/stores/useUserStore";
 
 const userStore = useUserStore();
 const isLoggedin = computed(() => userStore.isLoggedIn);

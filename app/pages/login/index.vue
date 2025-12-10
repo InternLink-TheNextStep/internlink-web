@@ -101,7 +101,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "~/stores/useUserStore";
 
 const formData = ref({ email: "", password: "", rememberMe: false });
 const showPassword = ref(false);

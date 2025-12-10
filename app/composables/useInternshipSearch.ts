@@ -1,20 +1,21 @@
+import { ref, computed } from "vue";
+import { useInternshipStore } from "~/stores/useInternshipStore";
 import type { Internship } from "@/core/types/internship";
 
 export function useInternshipSearch() {
   const store = useInternshipStore();
 
-  // 🔍 Search input
+  // Search input
   const searchQuery = ref("");
 
-  // 🎛️ Filters
+  // Filters with default "All" values
   const filters = ref({
-    industry: "",
-    location: "",
-    duration: "",
-    skills: "",
+    industry: "All Industries",
+    location: "All Locations",
+    skills: "All Skills",
   });
 
-  // 🧠 Filtered internships
+  // Computed filtered internships
   const filteredInternships = computed(() => {
     const list: Internship[] = store.internships || [];
     const query = searchQuery.value.toLowerCase();
@@ -29,13 +30,15 @@ export function useInternshipSearch() {
         desc.includes(query) ||
         companyName.includes(query);
 
-      // TODO: Apply additional filters if needed
-      // Example:
-      // const matchesFilters =
-      //   (!filters.value.industry || intern.industry === filters.value.industry)
-      // return matchesSearch && matchesFilters;
+      const matchesIndustry =
+        filters.value.industry === "All Industries" ||
+        (intern.industry && intern.industry.name === filters.value.industry);
 
-      return matchesSearch;
+      const matchesLocation =
+        filters.value.location === "All Locations" ||
+        intern.company?.place?.state === filters.value.location;
+
+      return matchesSearch && matchesIndustry && matchesLocation;
     });
   });
 
