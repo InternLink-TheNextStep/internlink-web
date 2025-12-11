@@ -103,6 +103,10 @@
 import { ref } from "vue";
 import { useUserStore } from "~/stores/useUserStore";
 
+definePageMeta({
+  middleware: ['guest-only'],
+});
+
 const formData = ref({ email: "", password: "", rememberMe: false });
 const showPassword = ref(false);
 const userStore = useUserStore();

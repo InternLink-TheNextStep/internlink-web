@@ -1,3 +1,4 @@
+import { navigateTo, useCookie, useRoute, useRouter } from "#app";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import {
@@ -7,7 +8,6 @@ import {
   onRefreshToken,
   onSignUp,
 } from "~/services/user-service";
-import { useCookie, navigateTo, useRoute, useRouter } from "#app";
 
 import type { User } from "@/core/types/user";
 
@@ -26,7 +26,7 @@ export const useUserStore = defineStore("user", () => {
   const clearToken = () => (useCookie("access_token").value = null);
 
   // Safe navigation to prevent redundant warnings
-  const safeNavigate = (path: string) => {
+  const safeNavigate = async (path: string) => {
     if (!import.meta.client) return;
 
     const resolved = router.resolve(path);
@@ -39,7 +39,7 @@ export const useUserStore = defineStore("user", () => {
       return; // already on the target, do nothing
     }
 
-    navigateTo(resolved.fullPath, { replace: true });
+    await navigateTo(path, { replace: true, external: false });
   };
 
   const resetUser = () => {
@@ -116,7 +116,9 @@ export const useUserStore = defineStore("user", () => {
       setToken(response.data.access_token);
       await initUser();
       scheduleTokenRefresh(3600);
-      safeNavigate("/home");
+      
+      // Force navigation with reload to ensure proper state
+      await safeNavigate("/home");
     } catch (err: any) {
       errorMessage.value = err?.message || "Network error";
     } finally {
@@ -151,7 +153,9 @@ export const useUserStore = defineStore("user", () => {
       setToken(response.data.access_token);
       await initUser();
       scheduleTokenRefresh(3600);
-      safeNavigate("/home");
+      
+      // Force navigation with reload to ensure proper state
+      await safeNavigate("/home");
     } catch (err: any) {
       errorMessage.value = err?.message || "Network error";
     } finally {
@@ -160,7 +164,7 @@ export const useUserStore = defineStore("user", () => {
   };
 
   /** --- Logout --- */
-  const logout = () => {
+  const logout = async () => {
     onLogout();
     resetUser();
     clearToken();
@@ -168,7 +172,7 @@ export const useUserStore = defineStore("user", () => {
     if (refreshTimer.value) clearTimeout(refreshTimer.value);
     refreshTimer.value = null;
 
-    safeNavigate("/login"); // only navigates if not already on /login
+    await safeNavigate("/login"); // only navigates if not already on /login
   };
 
   return {
