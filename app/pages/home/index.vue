@@ -2,8 +2,7 @@
   <div class="px-4 md:px-24 lg:px-[160px] mx-auto mt-8 flex flex-col">
     <div class="w-full mx-auto">
       <h1 class="text-3xl md:text-[34px] font-black mb-[25px]">
-        Welcome back,
-        {{ userStore.user.first_name + userStore.user.last_name }}!
+        Welcome back, {{ userStore.user?.first_name  + userStore.user?.last_name }}!
       </h1>
       <p class="font-bold text-lg md:text-[22px] mb-[15px]">
         Recommended for you
