@@ -107,7 +107,9 @@ const isUploading = ref(false);
 const uploadError = ref(null);
 const successMessage = ref(null);
 
-const TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL3VzZXIvbG9naW4iLCJpYXQiOjE3NjM4MDUzNjEsImV4cCI6MTc2MzgwODk2MSwibmJmIjoxNzYzODA1MzYxLCJqdGkiOiI4dkFBak9WOHZwaEs2RUlhIiwic3ViIjoiMiIsInBydiI6ImYyMDcyMGY1NGIxMTFkZGU5Y2VlZTc3ZTA3ZDA0MGQzMzMwYTk3NTYifQ.voKA7QoXb_sPhoB3pIZA09dNBTujUfbOgdjniT4nk_w";
+const TOKEN = useCookie("access_token").value;
+const config = useRuntimeConfig();
+
 
 function handleDragover(e) {
     e.preventDefault();
@@ -201,7 +203,7 @@ async function submitCV() {
             xhr.addEventListener('error', () => reject(new Error('Upload failed')));
             xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')));
 
-            xhr.open('POST', 'http://localhost:8000/api/v1/user/profile/cv');
+            xhr.open('POST', `${config.public.apiBase}/user/profile/cv`);
 
           
             xhr.setRequestHeader('Authorization', `Bearer ${TOKEN}`);
