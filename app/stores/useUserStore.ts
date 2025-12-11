@@ -39,7 +39,7 @@ export const useUserStore = defineStore("user", () => {
       return; // already on the target, do nothing
     }
 
-    await navigateTo(path, { replace: true, external: false });
+    await navigateTo(resolved.fullPath, { replace: true, external: false });
   };
 
   const resetUser = () => {
@@ -117,7 +117,7 @@ export const useUserStore = defineStore("user", () => {
       await initUser();
       scheduleTokenRefresh(3600);
       
-      // Force navigation with reload to ensure proper state
+      // Navigate to home page
       await safeNavigate("/home");
     } catch (err: any) {
       errorMessage.value = err?.message || "Network error";
@@ -154,7 +154,7 @@ export const useUserStore = defineStore("user", () => {
       await initUser();
       scheduleTokenRefresh(3600);
       
-      // Force navigation with reload to ensure proper state
+      // Navigate to home page
       await safeNavigate("/home");
     } catch (err: any) {
       errorMessage.value = err?.message || "Network error";
