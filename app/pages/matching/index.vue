@@ -203,7 +203,7 @@ async function submitCV() {
             xhr.addEventListener('error', () => reject(new Error('Upload failed')));
             xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')));
 
-            xhr.open('POST', `${config.public.apiBase}user/profile/cv`);
+            xhr.open('POST', `${config.public.apiBase}/user/profile/cv`);
 
           
             xhr.setRequestHeader('Authorization', `Bearer ${TOKEN}`);
