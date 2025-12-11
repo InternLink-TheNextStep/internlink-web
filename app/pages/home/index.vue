@@ -98,6 +98,7 @@ const updateIndicator = () => {
 
 definePageMeta({
   layout: "base",
+  middleware: ['auth-user'],
 });
 
 const jobs = [
