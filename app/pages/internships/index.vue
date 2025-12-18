@@ -50,9 +50,9 @@
 <script setup lang="ts">
 import { useInternshipSearch } from "~/composables/useInternshipSearch";
 
-import InternshipSearchBar from "~/components/internships/InternshipSearchBar.vue";
 import InternshipFilters from "~/components/internships/InternshipFilters.vue";
 import InternshipList from "~/components/internships/InternshipList.vue";
+import InternshipSearchBar from "~/components/internships/InternshipSearchBar.vue";
 import InternshipCardSkeleton from "~/components/skeletons/InternshipCardSkeleton.vue";
 
 definePageMeta({ layout: "base" });
@@ -60,8 +60,8 @@ definePageMeta({ layout: "base" });
 const { store, searchQuery, filters, filteredInternships } =
   useInternshipSearch();
 
-// Fetch internships on mount
+// Fetch internships on mount (force refresh to get latest favorite status)
 onMounted(async () => {
-  await store.fetchInternships();
+  await store.fetchInternships(true);
 });
 </script>
