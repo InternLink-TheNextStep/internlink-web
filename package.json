@@ -12,6 +12,7 @@
   "dependencies": {
     "@nuxt/icon": "^2.0.0",
     "@pinia/nuxt": "^0.11.2",
+    "@vueup/vue-quill": "^1.2.0",
     "daisyui": "^5.1.29",
     "jwt-decode": "^4.0.0",
     "nuxt": "^4.1.3",

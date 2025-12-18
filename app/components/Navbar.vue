@@ -74,7 +74,12 @@
             tabindex="-1"
             class="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow-sm right-0 absolute"
           >
-            <li><a>Profile</a></li>
+             <li>
+              <NuxtLink to="/profile">
+                Profile
+              </NuxtLink>
+            </li>
+
             <li><a @click="logout">Log Out</a></li>
           </ul>
         </div>
