@@ -1,5 +1,5 @@
-import { baseApi } from "@/core/api/base-api";
 import { useCookie } from "#app";
+import { baseApi } from "@/core/api/base-api";
 
 interface LoginResponse {
   data: {
@@ -98,4 +98,61 @@ export const onSignUp = async (
   });
 
   return response;
+};
+
+/**
+ * Upload user CV
+ */
+export const uploadCV = async (file: File) => {
+  const formData = new FormData();
+  formData.append("cv", file);
+
+  const config = useRuntimeConfig();
+  const token = useCookie("access_token").value;
+
+  try {
+    const response = await $fetch<{
+      data: {
+        cv_url: string;
+      };
+      message: string;
+    }>(`${config.public.apiBase}user/profile/cv`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response;
+  } catch (error: any) {
+    console.error("Failed to upload CV:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get user profile details
+ */
+export const getUserProfileDetails = async () => {
+  try {
+    const response = await baseApi<{
+      data: {
+        id: number;
+        university: string | null;
+        major: string | null;
+        graduation_year: number | null;
+        dob: string | null;
+        gender: string | null;
+        skills: string | null;
+        profile_picture_url: string | null;
+        cv_url: string | null;
+      };
+    }>("user/profile/details");
+
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch profile details:", error);
+    throw error;
+  }
 };

@@ -74,7 +74,8 @@
             tabindex="-1"
             class="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow-sm right-0 absolute"
           >
-            <li><a>Profile</a></li>
+            <NuxtLink to="/profile"><li><a>Profile</a></li></NuxtLink>
+            
             <li><a @click="logout">Log Out</a></li>
           </ul>
         </div>
@@ -177,7 +178,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useUserStore } from "~/stores/useUserStore";
 
