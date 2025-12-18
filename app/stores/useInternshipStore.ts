@@ -1,11 +1,11 @@
 import type { Internship } from "@/core/types/internship";
 import type { Place } from "@/core/types/place";
+import {
+    getInternshipBySlug,
+    getInternships,
+} from "@/services/internship-service";
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import {
-  getInternships,
-  getInternshipBySlug,
-} from "@/services/internship-service";
 
 export const useInternshipStore = defineStore("internships", () => {
   const internships = ref<Internship[]>([]);
@@ -15,8 +15,9 @@ export const useInternshipStore = defineStore("internships", () => {
   const error = ref<string | null>(null);
 
   /** Fetch all internships */
-  const fetchInternships = async () => {
-    if (internships.value.length) {
+  const fetchInternships = async (forceRefresh = false) => {
+    // Skip fetch if already loaded and not forcing refresh
+    if (internships.value.length && !forceRefresh) {
       loading.value = false;
       return;
     }

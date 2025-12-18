@@ -1,7 +1,24 @@
 <template>
   <div
-    class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all border border-gray-100"
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all border border-gray-100 relative"
   >
+    <!-- Save/Unsave Button (Top Right) -->
+    <button
+      v-if="userStore.isLoggedIn"
+      @click.prevent="handleToggleFavorite"
+      :disabled="isTogglingFavorite"
+      class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50"
+      :title="isFavorited ? 'Remove from saved' : 'Save internship'"
+    >
+      <Icon
+        :name="isFavorited ? 'mdi:heart' : 'mdi:heart-outline'"
+        :class="[
+          'w-6 h-6 transition-colors',
+          isFavorited ? 'text-red-500' : 'text-gray-400 hover:text-red-400'
+        ]"
+      />
+    </button>
+
     <!-- Left -->
     <div class="flex-1">
       <p class="text-sm text-blue-600 font-semibold mb-1">Finance</p>
@@ -36,13 +53,52 @@
   </div>
 </template>
 
-<script setup>
-defineProps({
+<script setup lang="ts">
+import { toggleFavorite } from "~/services/favorite-service";
+
+const props = defineProps({
   id: Number,
   category: String,
   title: String,
   description: String,
   file_path: String,
   slug: String,
+  is_favorited: {
+    type: Boolean,
+    default: false,
+  },
 });
+
+const emit = defineEmits(['favoriteToggled']);
+
+const userStore = useUserStore();
+const isFavorited = ref(props.is_favorited);
+const isTogglingFavorite = ref(false);
+
+// Watch for prop changes
+watch(() => props.is_favorited, (newValue) => {
+  isFavorited.value = newValue;
+});
+
+const handleToggleFavorite = async () => {
+  if (!props.id || isTogglingFavorite.value) return;
+
+  isTogglingFavorite.value = true;
+
+  try {
+    const result = await toggleFavorite(props.id);
+    isFavorited.value = result.is_favorited;
+    
+    // Emit event to parent component if needed
+    emit('favoriteToggled', {
+      internshipId: props.id,
+      isFavorited: result.is_favorited,
+    });
+  } catch (error) {
+    console.error("Failed to toggle favorite:", error);
+    // Optionally show error toast/notification
+  } finally {
+    isTogglingFavorite.value = false;
+  }
+};
 </script>

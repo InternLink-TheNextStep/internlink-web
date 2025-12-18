@@ -12,4 +12,5 @@ export interface Internship {
   type: string | null;
   start_at: string | null;
   end_at: string | null;
+  is_favorited?: boolean; // Track if the internship is favorited by the user
 }
