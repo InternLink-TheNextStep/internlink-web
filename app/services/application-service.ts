@@ -1,4 +1,5 @@
 import { baseApi } from "@/core/api/base-api";
+import { useApplicationStore } from "@/stores/userApplicationStore";
 
 interface ApplyResponse {
   data: {
@@ -55,14 +56,14 @@ export const checkUserHasCV = async (): Promise<{ has_cv: boolean; cv_url: strin
  */
 export const checkAlreadyApplied = async (internshipId: number): Promise<boolean> => {
   try {
-    const response = await baseApi<{
-      data: {
-        items: Array<{ internship: { id: number } }>;
-      };
-    }>("internships/applied");
+    const applicationStore = useApplicationStore();
 
-    return response.data.items.some(
-      (app: any) => app.internship?.id === internshipId
+    if (applicationStore.applications.length === 0) {
+      await applicationStore.fetchApplications();
+    }
+
+    return applicationStore.applications.some(
+      (app) => app.internshipId === internshipId
     );
   } catch (error) {
     console.error("Failed to check application status:", error);

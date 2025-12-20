@@ -1,8 +1,8 @@
 import type { Internship } from "@/core/types/internship";
 import type { Place } from "@/core/types/place";
 import {
-    getInternshipBySlug,
-    getInternships,
+  getInternshipBySlug,
+  getInternships,
 } from "@/services/internship-service";
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -34,6 +34,7 @@ export const useInternshipStore = defineStore("internships", () => {
     } finally {
       loading.value = false;
     }
+    console.log("Internships fetched:", internships.value.length);
   };
 
   /** Fetch a single internship by slug */
