@@ -8,8 +8,9 @@ import type { Place } from "~/core/types/place";
 
 export const getInternships = async (): Promise<Internship[]> => {
   try {
+    // Request all internships (no pagination limit)
     const response = await baseApi<{ data: { items: Internship[] } }>(
-      "internships"
+      "internships?limit=-1"
     );
 
     return response.data.items ?? [];

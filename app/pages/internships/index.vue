@@ -64,4 +64,5 @@ const { store, searchQuery, filters, filteredInternships } =
 onMounted(async () => {
   await store.fetchInternships(true);
 });
+
 </script>

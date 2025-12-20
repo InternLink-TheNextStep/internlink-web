@@ -125,6 +125,7 @@
 </template>
 
 <script setup lang="ts">
+import { useApplicationStore } from "@/stores/userApplicationStore";
 import { applyToInternship } from "~/services/application-service";
 
 const props = defineProps({
@@ -169,6 +170,11 @@ const handleApply = async () => {
 
   try {
     await applyToInternship(props.internshipId);
+
+    // Refresh applications list so UI updates reactively
+    const applicationStore = useApplicationStore();
+    await applicationStore.fetchApplications(true);
+
     isSuccess.value = true;
     emit("success");
     
