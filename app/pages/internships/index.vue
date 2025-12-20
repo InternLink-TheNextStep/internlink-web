@@ -1,5 +1,5 @@
 <template>
-  <section class="min-h-screen pb-16 bg-gray-50">
+  <section class="min-h-screen pb-16">
     <div class="max-w-7xl mx-auto px-4 py-6">
       <!-- Page Title -->
       <h1 class="text-3xl font-bold text-gray-800 mb-2">
