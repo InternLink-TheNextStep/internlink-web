@@ -11,6 +11,7 @@
         :file_path="intern.file_path"
         :slug="intern.slug"
         :is_favorited="intern.is_favorited"
+        :industry="intern.industry?.name"
         @favoriteToggled="handleFavoriteToggled"
       />
     </div>

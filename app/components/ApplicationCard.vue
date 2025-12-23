@@ -5,7 +5,7 @@
     >
         <div class="flex">
             <img
-                :src="image || '/images/No_img.png'"
+                :src="getSpaceFileUrl(image) || '/images/No_img.png'"
                  alt="internship image"
                 class="w-[70px] h-[70px] rounded-[8px] mr-[16px]"
             >
