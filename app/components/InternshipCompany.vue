@@ -65,11 +65,11 @@
           <div class="flex flex-col">
             <p class="font-semibold text-gray-900">Email</p>
             <a
-              v-if="currentInternship.company?.notifications_email"
-              :href="`mailto:${currentInternship.company.notifications_email}`"
+              v-if="currentInternship.company?.notification_email"
+              :href="`mailto:${currentInternship.company.notification_email}`"
               class="text-blue-600 hover:underline"
             >
-              {{ currentInternship.company.notifications_email }}
+              {{ currentInternship.company.notification_email }}
             </a>
             <span v-else>None</span>
           </div>
