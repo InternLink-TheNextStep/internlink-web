@@ -6,7 +6,7 @@ export interface Company {
     website: string | null;
     industry: string | null;
     description: string | null;
-    notifications_email: string | null;
+    notification_email: string | null;
     logo_path: string | null;
     place : Place | null;
 }
