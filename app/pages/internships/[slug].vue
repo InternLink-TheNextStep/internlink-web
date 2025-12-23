@@ -1,10 +1,10 @@
 <template>
-  <section class="min-h-screen bg-gray-50 pb-20">
+  <section class="min-h-screen pb-20">
     <div class="max-w-5xl mx-auto px-6">
       <!-- Back link -->
       <NuxtLink
         to="/internships"
-        class="text-blue-600 hover:underline text-sm mb-4 inline-block"
+        class="text-primary hover:underline text-sm mb-4 inline-block"
       >
         < Go Back
       </NuxtLink>
@@ -14,7 +14,7 @@
         v-if="store.loading && !internship"
         class="flex flex-col items-center justify-center h-48 text-gray-500"
       >
-        <span class="loading loading-ring text-blue-600 text-4xl mb-4"></span>
+        <span class="loading loading-ring text-primary text-4xl mb-4"></span>
         <span>Loading internship...</span>
       </div>
 
@@ -38,7 +38,7 @@
             :class="[
               'pb-2 text-sm font-medium transition-all',
               activeTab === tab
-                ? 'text-blue-600 border-b-2 border-blue-600'
+                ? 'text-primary border-b-2 border-primary'
                 : 'text-gray-500 hover:text-gray-700',
             ]"
           >
