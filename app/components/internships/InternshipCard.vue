@@ -21,7 +21,7 @@
 
     <!-- Left -->
     <div class="flex-1">
-      <p class="text-sm text-blue-600 font-semibold mb-1">Finance</p>
+      <p class="text-sm text-primary font-semibold mb-1">{{ industry }}</p>
       <h3 class="text-lg font-bold text-gray-800 mb-2">{{ title }}</h3>
       <p class="text-gray-600 text-sm leading-relaxed mb-4">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil sit enim
@@ -58,7 +58,7 @@ import { toggleFavorite } from "~/services/favorite-service";
 
 const props = defineProps({
   id: Number,
-  category: String,
+  industry: String,
   title: String,
   description: String,
   file_path: String,
