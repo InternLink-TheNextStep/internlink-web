@@ -32,15 +32,9 @@
       >
       <NuxtLink
         to="/saved"
-        class="text-[16px] mr-[20px]"
+        class="text-[16px]"
         :class="activeLinkClass('/saved')"
         >Saved</NuxtLink
-      >
-      <NuxtLink
-        to="/matching"
-        class="text-[16px]"
-        :class="activeLinkClass('/matching')"
-        >Internship Matching</NuxtLink
       >
     </div>
 
@@ -135,11 +129,6 @@
           to="/saved"
           class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4"
           >Saved</NuxtLink
-        >
-        <NuxtLink
-          to="/matching"
-          class="text-[16px] py-3 border-b border-gray-200 hover:bg-gray-200 px-4"
-          >Internship Matching</NuxtLink
         >
         <NuxtLink
           to="/"

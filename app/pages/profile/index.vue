@@ -152,7 +152,7 @@
 </template>
 
 <script setup lang="ts">
-import { getUserProfileDetails, uploadCV } from "~/services/user-service";
+import { getUserProfileDetails, uploadCVWithSkills } from "~/services/user-service";
 
 const userStore = useUserStore();
 const cvUrl = ref<string | null>(null);
@@ -213,8 +213,8 @@ const handleFileUpload = async (file: File) => {
   uploadProgress.value = `Uploading ${file.name}...`;
 
   try {
-    const response = await uploadCV(file);
-    cvUrl.value = response.data.cv_url;
+    const response = await uploadCVWithSkills(file);
+    cvUrl.value = response.data.user.cv_url;
     uploadSuccess.value = true;
     
     // Clear success message after 5 seconds
