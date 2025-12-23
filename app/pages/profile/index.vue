@@ -50,6 +50,7 @@
           </p>
         </div>
 
+
         <!-- Current CV -->
         <div v-if="cvUrl && !isUploading" class="mb-6">
           <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -96,15 +97,16 @@
             </p>
             <p class="text-sm text-gray-500">PDF, DOC, or DOCX (Max 5MB)</p>
           </div>
-          
-          <input
-            ref="fileInput"
-            type="file"
-            accept=".pdf,.doc,.docx"
-            @change="handleFileSelect"
-            class="hidden"
-          />
         </div>
+
+        <!-- Always render file input for upload/replace -->
+        <input
+          ref="fileInput"
+          type="file"
+          accept=".pdf,.doc,.docx"
+          @change="handleFileSelect"
+          class="hidden"
+        />
 
         <!-- Uploading State -->
         <div v-if="isUploading" class="text-center py-12">
@@ -237,8 +239,10 @@ const handleFileUpload = async (file: File) => {
   }
 };
 
+import { nextTick } from "vue";
 // Trigger file input click
-const triggerFileInput = () => {
+const triggerFileInput = async () => {
+  await nextTick();
   fileInput.value?.click();
 };
 
