@@ -21,6 +21,22 @@ export const getInternships = async (): Promise<Internship[]> => {
 };
 
 /**
+ * Fetch recommended internships based on user skills
+ */
+export const getRecommendedInternships = async (): Promise<Internship[]> => {
+  try {
+    const response = await baseApi<{ data: { items: Internship[] } }>(
+      "internships/recommendations"
+    );
+
+    return response.data.items ?? [];
+  } catch (error) {
+    console.error("Failed to fetch recommended internships:", error);
+    return [];
+  }
+};
+
+/**
  * Fetch single internship by slug
  */
 export const getInternshipBySlug = async (

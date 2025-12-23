@@ -101,9 +101,9 @@ export const onSignUp = async (
 };
 
 /**
- * Upload user CV
+ * Upload user CV with skills extraction
  */
-export const uploadCV = async (file: File) => {
+export const uploadCVWithSkills = async (file: File) => {
   const formData = new FormData();
   formData.append("cv", file);
 
@@ -113,10 +113,14 @@ export const uploadCV = async (file: File) => {
   try {
     const response = await $fetch<{
       data: {
-        cv_url: string;
+        user: any;
+        skills_data: {
+          skills: string[];
+          top_predictions: any[];
+        };
       };
       message: string;
-    }>(`${config.public.apiBase}user/profile/cv`, {
+    }>(`${config.public.apiBase}user/cv/upload`, {
       method: "POST",
       body: formData,
       headers: {
@@ -126,7 +130,7 @@ export const uploadCV = async (file: File) => {
 
     return response;
   } catch (error: any) {
-    console.error("Failed to upload CV:", error);
+    console.error("Failed to upload CV with skills:", error);
     throw error;
   }
 };
