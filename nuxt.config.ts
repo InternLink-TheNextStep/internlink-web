@@ -17,12 +17,19 @@ export default defineNuxtConfig({
       doSpacesUrl: process.env.NUXT_PUBLIC_DO_SPACES_URL,
       googleMapsApiKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY,
       assetUrl: process.env.NUXT_PUBLIC_ASSET_URL,
+      chatbotEnabled: process.env.NUXT_PUBLIC_CHATBOT_ENABLED === "true",
+      chatbotApiKey: process.env.NUXT_PUBLIC_CHATBOT_API_KEY,
     },
   },
   //  This ensures Nuxt includes your custom .d.ts files (like daisyui.d.ts)
   hooks: {
     "prepare:types": (opts) => {
       opts.tsConfig.include?.push("./types/**/*.d.ts");
+    },
+  },
+  vite: {
+    server: {
+      allowedHosts: ["longhorn-super-gazelle.ngrok-free.app"],
     },
   },
 });
